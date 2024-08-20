@@ -43,8 +43,8 @@ header {
     border: 0;
     padding: 0;
     cursor: pointer;
-    margin-left: 1em;
-    margin-right: 1em;
+    margin-left: 1vw;
+    margin-right: 1vw;
 }
 
 #buttonPageColor:hover {
