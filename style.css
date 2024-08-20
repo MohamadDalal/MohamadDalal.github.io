@@ -35,6 +35,18 @@ header {
     /* color: var(--main-text-color); */
 }
 
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: var(--secondary-bg-color);
+    /* position: sticky; */
+    width: 100%;
+    /* border-top: 2px solid var(--border-color); */
+    /* border-bottom: 2px solid var(--border-color); */
+}
+
 #buttonPageColor {
     font-size: 100%;
     font-family: inherit;
@@ -49,18 +61,6 @@ header {
 
 #buttonPageColor:hover {
     color: var(--secondary-hover-text-color);
-}
-
-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* flex-wrap: nowrap; */
-    background-color: var(--secondary-bg-color);
-    position: sticky;
-    width: 100%;
-    /* border-top: 2px solid var(--border-color); */
-    /* border-bottom: 2px solid var(--border-color); */
 }
 
 nav a {
