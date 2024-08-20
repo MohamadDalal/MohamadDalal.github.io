@@ -64,8 +64,8 @@ nav {
 }
 
 nav a {
-    margin-left: 1em;
-    margin-right: 1em;
+    margin-left: 1vw;
+    margin-right: 1vw;
     text-decoration: none;
     color: var(--secondary-text-color);
 }
