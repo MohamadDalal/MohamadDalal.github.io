@@ -43,7 +43,6 @@ $(document).ready(function() {
     // window.addEventListener("resize", adjustAside);
     // setTimeout(adjustAside, 200);
 
-    $("#buttonLightMode").css("display", "none");
     $("nav").load("/SharedComponents/NavBar.html");
     $("footer").load("/SharedComponents/Footer.html");
 });
