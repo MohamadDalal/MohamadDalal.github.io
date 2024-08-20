@@ -7,12 +7,19 @@
     --border-color: black;
 }
 
+html {
+    height: 100%;
+    width: 100%;
+}
+
 body {
     display: flex;
     flex-direction: column;
     margin: 0;
     background-color: var(--main-bg-color);
     color: var(--main-text-color);
+    min-height: 100%;
+    min-width: 100%;
     /* box-sizing: border-box; */
 }
 
@@ -26,6 +33,22 @@ header {
     width: 100%;
     background-color: var(--main-bg-color);
     /* color: var(--main-text-color); */
+}
+
+#buttonPageColor {
+    font-size: 100%;
+    font-family: inherit;
+    color: var(--secondary-text-color);
+    background-color: var(--secondary-bg-color);
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+#buttonPageColor:hover {
+    color: var(--secondary-hover-text-color);
 }
 
 nav {
@@ -58,7 +81,7 @@ section {
     height: 100%;
 }
 
-section article {
+article {
     background-color: var(--main-bg-color);
     color: var(--main-text-color);
     padding: 1em;
@@ -66,7 +89,7 @@ section article {
     width: 80%;
 }
 
-section aside {
+aside {
     float: left;
     background-color: var(--secondary-bg-color);
     color: var(--secondary-text-color);
@@ -106,12 +129,22 @@ section aside {
     }
 }
 
-aside a {
+aside a{
     color: var(--secondary-text-color);
     text-decoration: none;
 }
 
-aside a:hover {
+aside button{
+    font-size: 100%;
+    font-family: inherit;
+    color: var(--secondary-text-color);
+    background-color: var(--secondary-bg-color);
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+aside a:hover, aside button:hover {
     color: var(--secondary-hover-text-color);
 }
 
@@ -125,7 +158,7 @@ footer {
     align-items: center;
     background-color: var(--secondary-bg-color);
     color: var(--secondary-text-color);
-    position: sticky;
+    position: fixed;
     bottom: 0;
     width: 100%;
     /* border-top: 2px solid var(--border-color); */
