@@ -2,17 +2,10 @@
 <html>
 <head>
 <link rel="stylesheet" href="style.css"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/script.js"></script>
 <title>Moddy's hub</title>
 </head>
-
-<!-- <style>
-    nav {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: lightblue;
-    }
-</style> -->
 
 <body>
 
@@ -24,6 +17,7 @@
     <a href="#">About</a>
     <a href="Projects/Layout.html">Projects</a>
     <a href="#">Contact</a>
+    <button id="buttonPageColor" onclick="setDarkMode()">Dark Mode</button>
 </nav>
 </header>
 <section>
@@ -86,60 +80,5 @@
     <p>Details and stuff</p>
 </footer>
 </body>
-
-<script>
-
-const computedStyle = window.getComputedStyle(document.body)
-
-function adjustAside() {
-    let header = document.querySelector("header");
-    let aside = document.querySelector("aside");
-    // console.log(header);
-    // console.log(aside);
-
-    aside.style.top = header.clientHeight + Number(window.getComputedStyle(aside).marginTop.slice(0, -2)) + "px";
-    // console.log(window.getComputedStyle(aside).marginTop.slice(0, -2));
-    // console.log(header.clientHeight + Number(window.getComputedStyle(aside).margin.slice(0, -2)));
-    // console.log("Resized");
-    // console.log(aside.style.top);
-}
-
-function setDarkMode() {
-    document.body.style.setProperty("--main-bg-color", "black");
-    document.body.style.setProperty("--main-text-color", "white");
-}
-
-function setLightMode() {
-    document.body.style.setProperty("--main-bg-color", "white");
-    document.body.style.setProperty("--main-text-color", "black");
-}
-
-function sideLinkHover(event) {
-    // console.log(event.target);
-    event.target.parentElement.style.color = "white";
-}
-
-function sideLinkUnHover(event) {
-    // console.log(event.target);
-    event.target.parentElement.style.color = "black";
-}
-
-let aside_links = document.querySelectorAll("aside > ul > li");
-for (let i = 0; i < aside_links.length; i++) {
-    // console.log(i);
-    // console.log(aside_links[i].children);
-    aside_links[i].children[0].addEventListener("mouseover", sideLinkHover);
-    aside_links[i].children[0].addEventListener("mouseout", sideLinkUnHover);
-}
-
-adjustAside();
-window.addEventListener("resize", adjustAside);
-
-// console.log(style.getPropertyValue("--main-bg-color"));
-// document.body.style.setProperty("--main-bg-color", "black");
-// document.body.style.setProperty("--main-text-color", "white");
-// console.log(style.getPropertyValue("--main-bg-color"));
-
-</script>
 
 </html> 

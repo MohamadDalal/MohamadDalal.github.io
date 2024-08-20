@@ -1,7 +1,5 @@
 function adjustAside() {
-    let header = document.querySelector("header");
-    let aside = document.querySelector("aside");
-    aside.style.top = header.clientHeight + Number(window.getComputedStyle(aside).marginTop.slice(0, -2)) + "px";
+    $("aside").css("top", "calc(" + $("aside").css("margin-top") + " - " + $("header").css("height") + ")");
 }
 
 function loadArticle(filename){
