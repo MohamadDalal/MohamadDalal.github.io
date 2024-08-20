@@ -104,7 +104,7 @@ aside {
     /* box-sizing: border-box; */
 }
 
-@media (max-width: 800px) {
+@media only screen and ((max-width: 800px)  or (max-device-width: 800px)){
     section {
         flex-direction: column;
     }

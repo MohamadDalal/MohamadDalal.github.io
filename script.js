@@ -1,6 +1,10 @@
-function adjustAside() {
-    $("aside").css("top", "calc(" + $("aside").css("margin-top") + " - " + $("header").css("height") + ")");
-}
+// function adjustAside() {
+//     $("aside").css("top", "calc(" + $("aside").css("margin-top") + " + " + $("header").css("height") + ")");
+//     console.log($("aside").css("top"));
+//     console.log($("aside").css("margin-top"));
+//     console.log($("header").outerHeight(true));
+//     console.log(document.querySelector("header").clientHeight);
+// }
 
 function loadArticle(filename){
     $("article").load(filename);
@@ -32,12 +36,19 @@ function sideLinkUnHover(event) {
     event.target.parentElement.style.color = "black";
 }
 $(document).ready(function() {
-    const computedStyle = window.getComputedStyle(document.body);
+    //const computedStyle = window.getComputedStyle(document.body);
 
-    $("aside > ul > li").children().hover(sideLinkHover, sideLinkUnHover);
+    // $("aside > ul > li").children().hover(sideLinkHover, sideLinkUnHover);
 
-    adjustAside();
-    window.addEventListener("resize", adjustAside);
+    // window.addEventListener("resize", adjustAside);
+    // setTimeout(adjustAside, 200);
 
     $("#buttonLightMode").css("display", "none");
+    $("nav").load("/SharedComponents/NavBar.html");
+    $("footer").load("/SharedComponents/Footer.html");
 });
+// Use this for functions that need to calculate positions and sizes
+// Makes sure the window is fully loaded before calculating
+// $(window).on('load', function() {
+    
+// });
