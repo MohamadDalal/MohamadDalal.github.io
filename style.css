@@ -55,7 +55,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: nowrap;
+    /* flex-wrap: nowrap; */
     background-color: var(--secondary-bg-color);
     position: sticky;
     width: 100%;
