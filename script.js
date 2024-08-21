@@ -6,6 +6,7 @@
 //     console.log(document.querySelector("header").clientHeight);
 // }
 
+// Change between fixed and sticky depending on if there is a scrollbar
 function adjustFooter() {
     if ($(document).height() <= $(window).height()){
         $("footer").css("position", "fixed");
@@ -16,13 +17,17 @@ function adjustFooter() {
     }
 }
 
+// Load data inside the article tag for pages with side navigation
 function loadArticle(filename){
-    $("article").load(filename);
+    $("article").load(filename, function() {
+        adjustFooter();
+    });
 }
 
 function setDarkMode() {
     document.body.style.setProperty("--main-bg-color", "black");
     document.body.style.setProperty("--main-text-color", "white");
+    localStorage.setItem("darkMode", "true");
 
     $("#buttonPageColor").text("Light Mode");
     $("#buttonPageColor").attr("onclick", "setLightMode()");
@@ -31,6 +36,7 @@ function setDarkMode() {
 function setLightMode() {
     document.body.style.setProperty("--main-bg-color", "white");
     document.body.style.setProperty("--main-text-color", "black");
+    localStorage.setItem("darkMode", "false");
     
     $("#buttonPageColor").text("Dark Mode");
     $("#buttonPageColor").attr("onclick", "setDarkMode()");
@@ -45,6 +51,7 @@ function sideLinkUnHover(event) {
     // console.log(event.target);
     event.target.parentElement.style.color = "black";
 }
+
 $(document).ready(function() {
     //const computedStyle = window.getComputedStyle(document.body);
 
@@ -53,11 +60,18 @@ $(document).ready(function() {
     // window.addEventListener("resize", adjustAside);
     // setTimeout(adjustAside, 200);
 
-    $("nav").load("/SharedComponents/NavBar.html");
-    $("footer").load("/SharedComponents/Footer.html");
-    adjustFooter();
-    $("aside").on("click", function(){setTimeout(adjustFooter, 100)});
+    // We run this twice so that the page does not flicker at start
+    // Second run is mainly to switch the dark mode button to light mode
+    localStorage.getItem("darkMode") == "true" ? setDarkMode() : setLightMode();
+    $("nav").load("/SharedComponents/NavBar.html", function() {
+        localStorage.getItem("darkMode") == "true" ? setDarkMode() : setLightMode();
+    });
+    $("footer").load("/SharedComponents/Footer.html", function() {
+        adjustFooter();
+    });
+    // $("aside").on("click", function(){setTimeout(adjustFooter, 100)});
 });
+
 // Use this for functions that need to calculate positions and sizes
 // Makes sure the window is fully loaded before calculating
 // $(window).on('load', function() {
