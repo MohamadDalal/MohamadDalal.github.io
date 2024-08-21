@@ -6,6 +6,16 @@
 //     console.log(document.querySelector("header").clientHeight);
 // }
 
+function adjustFooter() {
+    if ($(document).height() <= $(window).height()){
+        $("footer").css("position", "fixed");
+        $("footer").css("bottom", "0");
+    }
+    else {
+        $("footer").css("position", "sticky");
+    }
+}
+
 function loadArticle(filename){
     $("article").load(filename);
 }
@@ -45,6 +55,8 @@ $(document).ready(function() {
 
     $("nav").load("/SharedComponents/NavBar.html");
     $("footer").load("/SharedComponents/Footer.html");
+    adjustFooter();
+    $("aside").on("click", function(){setTimeout(adjustFooter, 100)});
 });
 // Use this for functions that need to calculate positions and sizes
 // Makes sure the window is fully loaded before calculating
