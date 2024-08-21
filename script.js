@@ -69,6 +69,7 @@ $(document).ready(function() {
     $("footer").load("/SharedComponents/Footer.html", function() {
         adjustFooter();
     });
+    window.addEventListener("resize", adjustFooter);
     // $("aside").on("click", function(){setTimeout(adjustFooter, 100)});
 });
 
