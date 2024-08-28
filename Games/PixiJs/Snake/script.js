@@ -108,7 +108,7 @@ class SnakePart {
 
 // Double linked list that starts at the head and ends at the tail
 class Snake {
-    velocity = {x: 1, y: 0};
+    velocity = {x: 0, y: -1};
     score = 0;
     expand = false;
     dead = false;
@@ -116,7 +116,7 @@ class Snake {
     constructor(gameGrid){
         this.gameGrid = gameGrid;
         const startPosition = {x: Math.floor(Math.random()*(this.gameGrid.width-1)),
-                                y: Math.floor(Math.random()*(this.gameGrid.height-4))};
+                                y: Math.floor(Math.random()*(this.gameGrid.height-Math.floor(0.25*this.gameGrid.height))) + Math.floor(0.3*this.gameGrid.height)};
         //const startPosition = {x: 48, y: 10};
         console.log("Start position: ", startPosition);
         console.log(startPosition.x*gameGrid.tileSize, startPosition.y*gameGrid.tileSize);
@@ -140,29 +140,41 @@ class Snake {
     }
     
     moveSnake(){
-        this.gameGrid.setCell(this.tail.pos.x, this.tail.pos.y, 0);
-        // This syntax copies the dictionary
-        // Because otherwise a reference is assigned
-        // Source https://stackoverflow.com/a/54460487
-        this.tail.pos = {...this.tail.prevPart.pos};
-        const oldHeadPos = this.head.pos;
-        for(let i = this.body.length - 1; i > 0; i--){
-            const oldPos = this.body[i].pos;
-            this.dead = oldPos.x == oldHeadPos.x + this.velocity.x && oldPos.y == oldHeadPos.y + this.velocity.y;
-            this.body[i].pos = {...this.body[i - 1].pos};
+        if (((this.head.pos.x + this.velocity.x) == this.gameGrid.width) ||
+            ((this.head.pos.y + this.velocity.y) == this.gameGrid.height) ||
+            ((this.head.pos.x + this.velocity.x) < 0) ||  ((this.head.pos.y + this.velocity.y) < 0)){
+            this.dead = true;
         }
-        //this.body[0].pos = oldHeadPos;
-        this.body[0].pos = {...this.body[0].prevPart.pos};
-        // this.head.pos.x += this.velocity.x;
-        // this.head.pos.y += this.velocity.y;
-        // this.head.pos.x = (this.head.pos.x + this.velocity.x) % this.gameGrid.width;
-        // this.head.pos.y = (this.head.pos.y + this.velocity.y) % this.gameGrid.height;
-        this.head.pos.x = positiveMod((this.head.pos.x + this.velocity.x), this.gameGrid.width);
-        this.head.pos.y = positiveMod((this.head.pos.y + this.velocity.y), this.gameGrid.height);
-        if(this.gameGrid.getCell(this.head.pos.x, this.head.pos.y) == 2){
-            this.expand = true;
+        else{
+            this.gameGrid.setCell(this.tail.pos.x, this.tail.pos.y, 0);
+            // This syntax copies the dictionary
+            // Because otherwise a reference is assigned
+            // Source https://stackoverflow.com/a/54460487
+            this.tail.pos = {...this.tail.prevPart.pos};
+            const oldHeadPos = this.head.pos;
+            for(let i = this.body.length - 1; i > 0; i--){
+                const oldPos = this.body[i].pos;
+                this.dead = oldPos.x == oldHeadPos.x + this.velocity.x && oldPos.y == oldHeadPos.y + this.velocity.y;
+                this.body[i].pos = {...this.body[i - 1].pos};
+            }
+            //this.body[0].pos = oldHeadPos;
+            this.body[0].pos = {...this.body[0].prevPart.pos};
+            // this.head.pos.x += this.velocity.x;
+            // this.head.pos.y += this.velocity.y;
+            // this.head.pos.x = (this.head.pos.x + this.velocity.x) % this.gameGrid.width;
+            // this.head.pos.y = (this.head.pos.y + this.velocity.y) % this.gameGrid.height;
+            //this.head.pos.x = positiveMod((this.head.pos.x + this.velocity.x), this.gameGrid.width);
+            //this.head.pos.y = positiveMod((this.head.pos.y + this.velocity.y), this.gameGrid.height);
+            this.head.pos.x += this.velocity.x;
+            this.head.pos.y += this.velocity.y;
+            if(this.gameGrid.getCell(this.head.pos.x, this.head.pos.y) == 2){
+                this.expand = true;
+            }
+            else if(this.gameGrid.getCell(this.head.pos.x, this.head.pos.y) == 1){
+                this.dead = true;
+            }
+            this.gameGrid.setCell(this.head.pos.x, this.head.pos.y, 1);
         }
-        this.gameGrid.setCell(this.head.pos.x, this.head.pos.y, 1);
     }
 
     expandSnake(){
@@ -189,6 +201,51 @@ class Snake {
     setVelocity(x, y){
         this.velocity.x = x;
         this.velocity.y = y;
+    }
+}
+
+class Fruit {
+    active = true;
+    pos = {x: 0, y: 0};
+
+    constructor(gameGrid){
+        this.gameGrid = gameGrid;
+        this.genPos();
+        this.graphic = new PIXI.Graphics();
+        this.graphic.circle(this.gameGrid.tileSize/2, this.gameGrid.tileSize/2, this.gameGrid.tileSize/2);
+        this.graphic.pivot.set(this.gameGrid.tileSize/2, this.gameGrid.tileSize/2);
+        this.graphic.fill(0xFFFF00);
+        this.graphic.position.set((this.pos.x + 0.5) * this.gameGrid.tileSize, (this.pos.y + 0.5) * this.gameGrid.tileSize);
+        app.stage.addChild(this.graphic);
+    }
+
+    genPos(){
+        this.pos = {x: Math.floor(Math.random()*this.gameGrid.width),
+                    y: Math.floor(Math.random()*this.gameGrid.height)};
+        let iters = 0;
+        while((this.gameGrid.getCell(this.pos.x, this.pos.y) != 0) && iters < 25){
+            this.pos = {x: Math.floor(Math.random()*this.gameGrid.width),
+                        y: Math.floor(Math.random()*this.gameGrid.height)};
+            iters++;
+        }
+        if(iters == 25){
+            this.active = false;
+        }
+        else {
+            this.gameGrid.setCell(this.pos.x, this.pos.y, 2);
+        }
+        //console.log("Current fruit position: ", this.pos);
+    }
+
+    drawFruit(){
+        if(this.active){
+            this.graphic.visible = true;
+            this.graphic.position.set((this.pos.x + 0.5) * this.gameGrid.tileSize, (this.pos.y + 0.5) * this.gameGrid.tileSize);
+        }
+        else{
+            this.graphic.visible = false;
+        }
+
     }
 }
 
@@ -221,7 +278,8 @@ class Grid {
     const aspectRatio = windowWidth / windowHeight;
     console.log(aspectRatio);
     const aspectRatios = [1/1, 4/3, 16/10, 16/9, 13/6];
-    const tileSize = 40;
+    const tileSize = 20;
+    const numFruits = 1;
     let gameWidth = 0;
     let gameHeight = 0;
     if(aspectRatio > 1){
@@ -266,24 +324,57 @@ class Grid {
     app.canvas.style.border = "4px solid tomato";
     app.canvas.style.borderRadius = "10px";
     $("#game-div")[0].appendChild(app.canvas);
-
+    let running = true;
     const gameGrid = new Grid(gameWidth / tileSize, gameHeight / tileSize, tileSize);
     const snake = new Snake(gameGrid);
+    const fruits = [];
+    for(let i = 0; i < numFruits; i++){
+        fruits.push(new Fruit(gameGrid));
+    }
+    let activeFruits = numFruits;
     const initSpeed = 800/(gameGrid.width+gameGrid.height);
     let keyPressed = false;
-    for(let i = 0; i < 1; i++){
-        snake.expandSnake();
-    }
+    // for(let i = 0; i < 1; i++){
+    //     snake.expandSnake();
+    // }
     snake.drawSnake();
 
     let elapsed = 0.0;
     app.ticker.add((ticker) => {
         elapsed += ticker.deltaTime;
         if(elapsed > initSpeed){
-            snake.moveSnake();
-            snake.drawSnake();
-            elapsed = 0.0;
-            keyPressed = false;
+            if(running){
+                snake.moveSnake();
+                if (snake.dead){
+                    running = false;
+                    console.log("Game Over");
+                    alert("Game Over\nScore: " + snake.score);
+                }
+                else if (snake.expand){
+                    snake.expandSnake();
+                    for(let fruit of fruits){
+                        if(fruit.pos.x == snake.head.pos.x && fruit.pos.y == snake.head.pos.y){
+                            fruit.genPos();
+                            activeFruits = fruit.active ? activeFruits : activeFruits - 1;
+                            break;
+                        }
+                    }   
+                    if (activeFruits == 0){
+                        running = false;
+                    }
+                }
+                snake.drawSnake();
+                for(let fruit of fruits){
+                    fruit.drawFruit();
+                }
+                elapsed = 0.0;
+                keyPressed = false;
+            }
+            //else{
+            //    console.log("Game Over");
+            //    alert("Game Over");
+            //    running = false;
+            //}
         }
     })
 
@@ -325,6 +416,21 @@ class Grid {
         }
     }
 
+    // Testing the different behaviour between circle and rect
+    // const testGraphic = new PIXI.Graphics();
+    // testGraphic.circle(tileSize/2, tileSize/2, tileSize/2);
+    // testGraphic.fill(0xFFFFFF);
+    // testGraphic.moveTo(0, tileSize/2)
+    //            .lineTo(tileSize/2, 0)
+    //            .lineTo(tileSize, tileSize/2);
+    // //testGraphic.rect(0, 0, tileSize, tileSize);
+    // testGraphic.fill(0xFF0000);
+    // app.stage.addChild(testGraphic);
+    // //testGraphic.position.set(0, 0);
+    // testGraphic.pivot.set(tileSize/2, tileSize/2);
+    // testGraphic.position.set(0.5*tileSize, 0.5*tileSize);
+    // testGraphic.rotation = Math.PI/2;
+    // running = false;
 
     // // Create the sprite and add it to the stage
     // await PIXI.Assets.load('sample.png');
