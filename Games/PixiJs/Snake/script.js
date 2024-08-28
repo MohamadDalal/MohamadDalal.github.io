@@ -67,24 +67,33 @@ class SnakePart {
             this.straightGraphic.rotation = Math.atan2(this.prevPart.pos.y - this.pos.y, this.prevPart.pos.x - this.pos.x);
         }
         else{
-            const angleWithNesxt = Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x);
+            const angleWithNext = Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x);
             const angleWithPrev = Math.atan2(this.prevPart.pos.y - this.pos.y, this.prevPart.pos.x - this.pos.x);
-            console.log(angleWithNesxt, angleWithPrev);
-            if(Math.abs(angleWithNesxt - angleWithPrev) == Math.PI){
-                console.log("Straight");
+            //console.log(angleWithNext, angleWithPrev);
+            if(Math.abs(angleWithNext - angleWithPrev) == Math.PI){
+            //if(Math.abs(angleWithNext - angleWithPrev) == Math.PI/2){
+                //console.log("Straight");
                 this.straightGraphic.visible = true;
                 this.cornerGraphic.visible = false;
                 this.straightGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
                 this.straightGraphic.position.set((this.pos.x+0.5) * this.tileSize, (this.pos.y+0.5) * this.tileSize);
-                this.straightGraphic.rotation = Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x);
+                //this.straightGraphic.rotation = Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x);
+                this.straightGraphic.rotation = angleWithNext
             }
-            else if (Math.abs(angleWithNesxt - angleWithPrev) == Math.PI/2){
-                console.log("Corner");
+            else if (Math.abs(Math.abs(angleWithNext) - Math.abs(angleWithPrev)) == Math.PI/2){
+                //console.log(angleWithNext, angleWithPrev);
+                //console.log("Corner");
                 this.straightGraphic.visible = false;
                 this.cornerGraphic.visible = true;
                 this.cornerGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
                 this.cornerGraphic.position.set((this.pos.x+0.5) * this.tileSize, (this.pos.y+0.5) * this.tileSize);
-                this.cornerGraphic.rotation = Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x);
+                //this.cornerGraphic.rotation = Math.max(Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x),
+                //                                       Math.atan2(this.prevPart.pos.y - this.pos.y, this.prevPart.pos.x - this.pos.x));
+                //this.cornerGraphic.rotation = angleWithNext + angleWithPrev;
+                this.cornerGraphic.rotation = (Math.abs(angleWithNext-angleWithPrev) > Math.PI) ? 3*Math.PI/2 : Math.max(angleWithNext, angleWithPrev);
+            }
+            else{
+                console.log(angleWithNext, angleWithPrev);
             }
         }
     }
@@ -100,6 +109,8 @@ class SnakePart {
 // Double linked list that starts at the head and ends at the tail
 class Snake {
     velocity = {x: 1, y: 0};
+    score = 0;
+    expand = false;
     dead = false;
 
     constructor(gameGrid){
@@ -148,6 +159,9 @@ class Snake {
         // this.head.pos.y = (this.head.pos.y + this.velocity.y) % this.gameGrid.height;
         this.head.pos.x = positiveMod((this.head.pos.x + this.velocity.x), this.gameGrid.width);
         this.head.pos.y = positiveMod((this.head.pos.y + this.velocity.y), this.gameGrid.height);
+        if(this.gameGrid.getCell(this.head.pos.x, this.head.pos.y) == 2){
+            this.expand = true;
+        }
         this.gameGrid.setCell(this.head.pos.x, this.head.pos.y, 1);
     }
 
@@ -161,6 +175,8 @@ class Snake {
         //this.tail.pos.y++;
         this.gameGrid.setCell(this.tail.pos.x, this.tail.pos.y, 1);
         this.body.push(newPart);
+        this.score++;
+        this.expand = false;
     }
 
     updateSnake(){
@@ -205,7 +221,7 @@ class Grid {
     const aspectRatio = windowWidth / windowHeight;
     console.log(aspectRatio);
     const aspectRatios = [1/1, 4/3, 16/10, 16/9, 13/6];
-    const tileSize = 20;
+    const tileSize = 40;
     let gameWidth = 0;
     let gameHeight = 0;
     if(aspectRatio > 1){
@@ -253,6 +269,8 @@ class Grid {
 
     const gameGrid = new Grid(gameWidth / tileSize, gameHeight / tileSize, tileSize);
     const snake = new Snake(gameGrid);
+    const initSpeed = 800/(gameGrid.width+gameGrid.height);
+    let keyPressed = false;
     for(let i = 0; i < 1; i++){
         snake.expandSnake();
     }
@@ -261,12 +279,51 @@ class Grid {
     let elapsed = 0.0;
     app.ticker.add((ticker) => {
         elapsed += ticker.deltaTime;
-        if(elapsed > 100){
+        if(elapsed > initSpeed){
             snake.moveSnake();
             snake.drawSnake();
             elapsed = 0.0;
+            keyPressed = false;
         }
     })
+
+    document.onkeyup = (e) => {
+        if(!keyPressed){   
+            //console.log(e.key);
+            switch(e.key){
+                case "ArrowUp":
+                case "w":
+                    if(snake.velocity.y == 0){
+                        snake.setVelocity(0, -1);
+                        keyPressed = true;
+                    }
+                    break;
+                case "ArrowDown":
+                case "s":
+                    if(snake.velocity.y == 0){
+                        snake.setVelocity(0, 1);
+                        keyPressed = true;
+                    }
+                    break;
+                case "ArrowLeft":
+                case "a":
+                    if(snake.velocity.x == 0){
+                        snake.setVelocity(-1, 0);
+                        keyPressed = true;
+                    }
+                    break;
+                case "ArrowRight":
+                case "d":
+                    if(snake.velocity.x == 0){
+                        snake.setVelocity(1, 0);
+                        keyPressed = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
 
     // // Create the sprite and add it to the stage
