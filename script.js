@@ -52,7 +52,7 @@ function sideLinkUnHover(event) {
     event.target.parentElement.style.color = "black";
 }
 
-$(document).ready(function() {
+$(document).ready(async function() {
     //const computedStyle = window.getComputedStyle(document.body);
 
     // $("aside > ul > li").children().hover(sideLinkHover, sideLinkUnHover);
@@ -63,10 +63,10 @@ $(document).ready(function() {
     // We run this twice so that the page does not flicker at start
     // Second run is mainly to switch the dark mode button to light mode
     localStorage.getItem("darkMode") == "true" ? setDarkMode() : setLightMode();
-    $("nav").load("/SharedComponents/NavBar.html", function() {
+    await $("nav").load("/SharedComponents/NavBar.html", function() {
         localStorage.getItem("darkMode") == "true" ? setDarkMode() : setLightMode();
     });
-    $("footer").load("/SharedComponents/Footer.html", function() {
+    await $("footer").load("/SharedComponents/Footer.html", function() {
         adjustFooter();
     });
     window.addEventListener("resize", adjustFooter);

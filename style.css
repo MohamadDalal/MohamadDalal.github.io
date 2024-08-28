@@ -35,6 +35,10 @@ header {
     /* color: var(--main-text-color); */
 }
 
+header h1 {
+    justify-content: center;
+}
+
 nav {
     display: flex;
     justify-content: center;
