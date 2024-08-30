@@ -26,7 +26,8 @@ class SnakePart {
             this.straightGraphic.moveTo(this.tileSize, 0)
                                 .lineTo(0, this.tileSize/2)
                                 .lineTo(this.tileSize, this.tileSize);
-            this.straightGraphic.fill(0x00FF00);
+            this.straightGraphic.fill(0xFF0000);
+            this.straightGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
             app.stage.addChild(this.straightGraphic);
         }
         else if(this.isTail()){
@@ -35,19 +36,22 @@ class SnakePart {
                                 .lineTo(0, this.tileSize/2)
                                 .lineTo(this.tileSize, this.tileSize*3/4);
             this.straightGraphic.fill(0xFF0000);
+            this.straightGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
             app.stage.addChild(this.straightGraphic);
         }
         else {
             this.straightGraphic = new PIXI.Graphics();
             this.straightGraphic.rect(0, this.tileSize/4, this.tileSize, this.tileSize/2);
-            this.straightGraphic.fill(0xFFFF00);
+            this.straightGraphic.fill(0xFF0000);
+            this.straightGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
             app.stage.addChild(this.straightGraphic);
             this.cornerGraphic = new PIXI.Graphics();
             this.cornerGraphic.moveTo(this.tileSize/4, 0)
                               .lineTo(this.tileSize, this.tileSize*3/4)
                               .lineTo(this.tileSize, this.tileSize/4)
                               .lineTo(this.tileSize*3/4, 0);
-            this.cornerGraphic.fill(0xFFFF00);
+            this.cornerGraphic.fill(0xFF0000);
+            this.cornerGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
             app.stage.addChild(this.cornerGraphic);
         }
     }
@@ -57,12 +61,10 @@ class SnakePart {
         // For the head we can use the direction of the next part
         // For the tail we can use the direction of the previous part
         if(this.isHead()){
-            this.straightGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
             this.straightGraphic.position.set((this.pos.x+0.5) * this.tileSize, (this.pos.y+0.5) * this.tileSize);
             this.straightGraphic.rotation = Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x);
         }
         else if(this.isTail()){
-            this.straightGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
             this.straightGraphic.position.set((this.pos.x+0.5) * this.tileSize, (this.pos.y+0.5) * this.tileSize);
             this.straightGraphic.rotation = Math.atan2(this.prevPart.pos.y - this.pos.y, this.prevPart.pos.x - this.pos.x);
         }
@@ -75,7 +77,6 @@ class SnakePart {
                 //console.log("Straight");
                 this.straightGraphic.visible = true;
                 this.cornerGraphic.visible = false;
-                this.straightGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
                 this.straightGraphic.position.set((this.pos.x+0.5) * this.tileSize, (this.pos.y+0.5) * this.tileSize);
                 //this.straightGraphic.rotation = Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x);
                 this.straightGraphic.rotation = angleWithNext
@@ -85,7 +86,6 @@ class SnakePart {
                 //console.log("Corner");
                 this.straightGraphic.visible = false;
                 this.cornerGraphic.visible = true;
-                this.cornerGraphic.pivot.set(this.tileSize / 2, this.tileSize / 2);
                 this.cornerGraphic.position.set((this.pos.x+0.5) * this.tileSize, (this.pos.y+0.5) * this.tileSize);
                 //this.cornerGraphic.rotation = Math.max(Math.atan2(this.nextPart.pos.y - this.pos.y, this.nextPart.pos.x - this.pos.x),
                 //                                       Math.atan2(this.prevPart.pos.y - this.pos.y, this.prevPart.pos.x - this.pos.x));
@@ -332,7 +332,9 @@ class Grid {
         fruits.push(new Fruit(gameGrid));
     }
     let activeFruits = numFruits;
-    const initSpeed = 800/(gameGrid.width+gameGrid.height);
+    const initSpeed = 500/(gameGrid.width+gameGrid.height);
+    const endSpeed = 250/(gameGrid.width+gameGrid.height);
+    let gameSpeed = initSpeed;
     let keyPressed = false;
     // for(let i = 0; i < 1; i++){
     //     snake.expandSnake();
@@ -341,8 +343,10 @@ class Grid {
 
     let elapsed = 0.0;
     app.ticker.add((ticker) => {
+        gameSpeed = Math.max( ((endSpeed - initSpeed)/50) * snake.score + initSpeed, endSpeed);
+        //gameSpeed = (initSpeed - endSpeed) * Math.exp(-0.1 * snake.score) + endSpeed; // This is probably too steep
         elapsed += ticker.deltaTime;
-        if(elapsed > initSpeed){
+        if(elapsed > gameSpeed){
             if(running){
                 snake.moveSnake();
                 if (snake.dead){
