@@ -435,39 +435,40 @@ class Grid {
         touchEnd[1] = e.pageY
         //console.log(touchStart, touchEnd);
         const angle = Math.atan2(touchEnd[1] - touchStart[1], touchEnd[0] - touchStart[0]);
-        console.log(angle);
+        //console.log(angle);
         if ((angle < -Math.PI/4 && angle > -3*Math.PI/4) && snake.velocity.y == 0){
             document.dispatchEvent(new KeyboardEvent('keyup',{'key':'ArrowUp'}));
         } else if ((angle > Math.PI/4 && angle < 3*Math.PI/4) && snake.velocity.y == 0){
             document.dispatchEvent(new KeyboardEvent('keyup',{'key':'ArrowDown'}));
         } else if ((angle > 3*Math.PI/4 || angle < -3*Math.PI/4) && snake.velocity.x == 0){
-            console.log("Got left movement with mouse");
+            //console.log("Got left movement with mouse");
             document.dispatchEvent(new KeyboardEvent('keyup',{'key':'ArrowLeft'}));
         } else if ((angle < Math.PI/4 && angle > -Math.PI/4) && snake.velocity.x == 0){
             document.dispatchEvent(new KeyboardEvent('keyup',{'key':'ArrowRight'}));
         }
       })
 
-    // document.addEventListener('touchstart', e => {
-    //     touchStart[0] = e.changedTouches[0].screenX
-    //     touchStart[1] = e.changedTouches[0].screenY
-    //   })
+    document.addEventListener('touchstart', e => {
+        touchStart[0] = e.changedTouches[0].screenX
+        touchStart[1] = e.changedTouches[0].screenY
+      })
       
-    //   document.addEventListener('touchend', e => {
-    //     touchEnd[0] = e.changedTouches[0].screenX
-    //     touchEnd[1] = e.changedTouches[0].screenY
-    //     //console.log(touchStart, touchEnd)
-    //     const angle = Math.atan2(touchEnd[1] - touchStart[1], touchEnd[0] - touchStart[0]);
-    //     if (angle > Math.PI/4 && angle < 3*Math.PI/4 && snake.velocity.y == 0){
-    //         el.dispatchEvent(new KeyboardEvent('keypress',{'key':'ArrowUp'}));
-    //     } else if (angle < -Math.PI/4 && angle > -3*Math.PI/4 && snake.velocity.y == 0){
-    //         el.dispatchEvent(new KeyboardEvent('keypress',{'key':'ArrowDown'}));
-    //     } else if (angle > 3*Math.PI/4 && angle < -3*Math.PI/4 && snake.velocity.x == 0){
-    //         el.dispatchEvent(new KeyboardEvent('keypress',{'key':'ArrowLeft'}));
-    //     } else if (angle < Math.PI/4 && angle > -Math.PI/4 && snake.velocity.x == 0){
-    //         el.dispatchEvent(new KeyboardEvent('keypress',{'key':'ArrowRight'}));
-    //     }
-    //   })
+      document.addEventListener('touchend', e => {
+        touchEnd[0] = e.changedTouches[0].screenX
+        touchEnd[1] = e.changedTouches[0].screenY
+        //console.log(touchStart, touchEnd)
+        const angle = Math.atan2(touchEnd[1] - touchStart[1], touchEnd[0] - touchStart[0]);
+        if ((angle < -Math.PI/4 && angle > -3*Math.PI/4) && snake.velocity.y == 0){
+            document.dispatchEvent(new KeyboardEvent('keyup',{'key':'ArrowUp'}));
+        } else if ((angle > Math.PI/4 && angle < 3*Math.PI/4) && snake.velocity.y == 0){
+            document.dispatchEvent(new KeyboardEvent('keyup',{'key':'ArrowDown'}));
+        } else if ((angle > 3*Math.PI/4 || angle < -3*Math.PI/4) && snake.velocity.x == 0){
+            //console.log("Got left movement with mouse");
+            document.dispatchEvent(new KeyboardEvent('keyup',{'key':'ArrowLeft'}));
+        } else if ((angle < Math.PI/4 && angle > -Math.PI/4) && snake.velocity.x == 0){
+            document.dispatchEvent(new KeyboardEvent('keyup',{'key':'ArrowRight'}));
+        }
+      })
 
     // Testing the different behaviour between circle and rect
     // const testGraphic = new PIXI.Graphics();
