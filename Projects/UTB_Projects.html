@@ -1,0 +1,54 @@
+<h1>
+    UTB Esports
+</h1>
+
+<p>
+    Maybe we should start with what UTB is first. It started as a Rocket League team, and develepod into an oranization and community with multiple teams and a bunch of people. 
+    The organization was founded by my friend Longey, who was and still is the captain of the main UTB team.
+    <br><br>
+    You might think I was a member of the UTB team. However, that is not the case, as we first started as rivals in the Indy Gaming League, which was a Rocket League Competition. 
+    Our team even ended up poaching one of UTB's players, whom we won multiple leagues with, but that is a story in <a href="/Interests/Layout.html">another page</a>.
+    After years of refusing to join any organization. I finally accepted Longey's offer to join UTB at the end 2023, under the UTB bSports name. 
+    Since then I have been a part of UTB as a player and the official UTB coding person, who is responsible for creating any programs that might be useful to the organization's needs.
+</p>
+
+<h1>
+    The UTBot
+</h1>
+
+<p>
+    The code for the UTBot can be found <a href="https://github.com/MohamadDalal/UTBot">here</a>. The UTBot is the Discord bot created for the UTB Discord server.
+    It was created from a desire to allow for multiple reaction role messages without having to pay for a premium subscription in some other bot.
+    <br><br>
+    To achieve this UTBot is able to send, delete and edit messages. Then it is able to assign a message as a "role message" and add reactions to that message, which can be used for user to self-add or remove roles.
+    The bot stores the message and role data in json files, and it is coded to be able to handle different servers, which is useful for testing in different test servers before deploying.
+    <br><br>
+    The bot is also capable of updating a Liquipedia page based on data from a challonge bracket. This was created for the UTB invitational tournaments, which utilize both a challonge bracket and a Liquipedia page to share information and results.
+    Since it is much easier to update a challonge bracket than a Liquipedia page, it was seen as a great convinience to only need to update the challonge bracket.
+    That is why I went to try and give the bot the ability to fetch and read data from challonge, and then translate that data to the format used in Liquipedia.
+    <br><br>
+    This task required understanding the formatting of both Liquipedia and challonge data, and the utilization of http requests to communicate with the Liquipedia API.
+    Luckily there exists a python library for working with the challonge API.
+    The bot is used by assigning a challonge and Liquipedia bracket, and then a simple sync command can be used everytime the challonge bracket is edited to update the Liquipedia page.
+    <br><br>
+    So far these are the functionalities of the bot. A scratched feature that was developed is the ability to create assistance channels for new members when they join the server.
+    However, this was scratched, as it was not seen as a needed feature anymore.
+    A feature that is on the todo list is to utilize the bot to handle tryouts, where a new member can send a tryout, and one of the team captains can accept the tryout request.
+    Once accepted, the player gets a role to communicate with the team that they will try out with. This is to streamline the tryout process without the need for moderators to manually assign roles.
+</p>
+
+<h1>
+    Blender Plugin for Cinematics Buddy
+</h1>
+
+<p>
+    Cinematics Buddy is a Rocket League addon that is able to record videos and extract precise position data of the ball, camera and cars from a replay.
+    This data then can be converted to work in 3ds Max and Adobe After Effects, which can be used to add effects to replays for better videos.
+    <br><br>
+    Sadly 3ds Max and After Effects are both paid software, and some of the creators in UTB wanted something similiar to work with. Therefore, I went on an endevour to understand and translate the plugin's data into a Blender animation file.
+    This required understanding how to create Blender plugins, and how to translate from 3ds Max coordinates to Blender coordinates.
+    After a lot of struggle I was able to convert the ball and camera data to work in Blender. Then by rendering using the camera it was possible to overlay effects on the actual video.
+    This plugin was then used to create a bunch of UTB montages and intro videos, and proved to be great tool to realize the creative vision of our creative team.
+    <br><br>
+    My task is not done, as there is still the need to parse the car data into Blender, and the Blender plugin currently only works with 60 fps. Therefore, it is needed to accomodate for different fps values, or variable fps.
+</p>
