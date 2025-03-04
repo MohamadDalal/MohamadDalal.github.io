@@ -1,7 +1,41 @@
-<h1>
-    Linear coding
+<h1 style="font-size: 2em;">
+    Random Linear Network Coding
 </h1>
 
+<h2>
+    Summary
+</h2>
+
 <p>
-    WIP
+    <a href="https://github.com/Mast3rwaf1z/ComTek-P1">Repository</a>
+    <br><br>
+    Based on a Bachelor project where a group created a sensor system that reports garbage levels in garbage containers.
+    We try to implement over the air updates to all sensors using the Long Range (LoRa) protocol and Random Linear Network Coding to mitigate packet loss.
 </p>
+
+<h2>
+    Summaryn't
+</h2>
+
+<p>
+    The original system is configured in a star topology, where LoPy 4 micro-controllers are placed in containers, and a Raspberry Pi 4 based gateway is somewhere in the middle to communicate with the sensors through LoRa.
+    The gateways are connected to the internet, and can be communicated with using a Chirpstack server.
+    The goal of the project was to enable updates to the sensors over the air through the unreliable LoRa connection. That is why Linear Network Coding was investigated as a retransmission strategy.
+    <br><br>
+    The project itself was split into three main tasks:
+    <li>
+        Understanding the Chirpstack server and setting it up to work with the gateway Raspberry Pi
+    </li>
+    <li>
+        Implementing a simple LoRa communication system between the gateway and some LoPy 4 micro-controllers
+    </li>
+    <li>
+        Writing the encoder and decoder that would be used to implement Random Linear Network Coding
+    </li>
+    <br>
+    Seeing as I mainly worked with the encoder/decoder in this project I am only really able to talk in details about that part.
+</p>
+
+<h3>
+    Random Linear Network Coding
+</h3>
