@@ -37,5 +37,189 @@
 </p>
 
 <h3>
+    Linear Network Coding
+</h3>
+
+<p>
+    Transmission using LoRa can be unreliable with a good amount of packet loss. TCP usually handles packet loss by retransmitting lost packets, however data transmission is costly in battery drived interet of things (IoT) devices.
+    Usually the different IoT devices lose different packets, and retransmitting all lost packets will lead to a lot of redundancy and wasted energy.
+    <br><br>
+    Linear Network Coding is a way to mitigate this. Instead of retransmitting lost packets, the sender sends a linear combination of the packets that were lost. The receiver can then use this linear combination to recover the lost packets.
+    Let us take an example where three packets are sent and node 1 lost the first, node 2 lost the second and node 3 lost the third packet. Resending all three packets alone would require three transmissions, but send the linear combination
+    <math>
+        <mrow>
+            <msub><mi>P</mi><mn>1</mn></msub>
+            <mo>&#x2295;</mo>
+            <msub><mi>P</mi><mn>2</mn></msub>
+            <mo>&#x2295;</mo>
+            <msub><mi>P</mi><mn>3</mn></msub>
+            <mo>=</mo>
+            <msub><mi>P</mi><mn>123</mn></msub>
+        </mrow>
+    </math>
+    where <math><mo>&#x2295;</mo></math> denotes XOR. Once the three nodes receive packet <math><msub><mi>P</mi><mn>123</mn></msub></math> they can use it to recover their lost packets by doing <br>
+    <math>
+        <mrow>
+            <msub><mi>P</mi><mn>123</mn></msub>
+            <mo>&#x2295;</mo>
+            <msub><mi>P</mi><mn>2</mn></msub>
+            <mo>&#x2295;</mo>
+            <msub><mi>P</mi><mn>3</mn></msub>
+            <mo>=</mo>
+            <msub><mi>P</mi><mn>1</mn></msub>
+        </mrow>
+    </math>
+    <br>
+    <math>
+        <mrow>
+            <msub><mi>P</mi><mn>123</mn></msub>
+            <mo>&#x2295;</mo>
+            <msub><mi>P</mi><mn>1</mn></msub>
+            <mo>&#x2295;</mo>
+            <msub><mi>P</mi><mn>3</mn></msub>
+            <mo>=</mo>
+            <msub><mi>P</mi><mn>2</mn></msub>
+        </mrow>
+    </math>
+    <br>
+    <math>
+        <mrow>
+            <msub><mi>P</mi><mn>123</mn></msub>
+            <mo>&#x2295;</mo>
+            <msub><mi>P</mi><mn>1</mn></msub>
+            <mo>&#x2295;</mo>
+            <msub><mi>P</mi><mn>2</mn></msub>
+            <mo>=</mo>
+            <msub><mi>P</mi><mn>3</mn></msub>
+        </mrow>
+    </math>
+    <br>
+    respectively. This is possible due to two properties of XOR:<br>
+    <li>
+        <math>
+            <mrow>
+                <mi>A</mi>
+                <mo>&#x2295;</mo>
+                <mi>A</mi>
+                <mo>=</mo>
+                <mn>0</mn>
+            </mrow>
+        </math>
+    </li>
+    <li>
+        <math>
+            <mrow>
+                <mi>A</mi>
+                <mo>&#x2295;</mo>
+                <mi>B</mi>
+                <mo>&#x2295;</mo>
+                <mi>A</mi>
+                <mo>=</mo>
+                <mi>B</mi>
+                <mo>&#x2295;</mo>
+                <mi>A</mi>
+                <mo>&#x2295;</mo>
+                <mi>A</mi>
+                <mo>=</mo>
+                <mi>B</mi>
+            </mrow>
+        </math>
+    </li>
+    Now imagine hundreds of packets, with tens of them getting lost at a time. Using linear coding can reduce the amount of retransmissions significantly. Furthermore, since these are essentially systems of linear equations, they can be represented using matrices and solved using linear algebra. Which computers are very good at:
+    <math display="block">
+        <mrow>
+           <mo>[</mo>
+           <mtable>
+              <mtr>
+                <mtd><msub><mi>c</mi><mn>11</mn></msub></mtd>
+                <mtd><msub><mi>c</mi><mn>12</mn></msub></mtd>
+                <mtd><mi>&#x22EF;</mi></mtd>
+                <mtd><msub><mi>c</mi><mi>1m</mi></msub></mtd>
+              </mtr>
+              
+              <mtr>
+                <mtd><msub><mi>c</mi><mi>21</mi></msub></mtd>
+                <mtd><msub><mi>c</mi><mi>22</mi></msub></mtd>
+                <mtd><mi>&#x22EF;</mi></mtd>
+                <mtd><msub><mi>c</mi><mi>2m</mi></msub></mtd>
+              </mtr>
+              
+              <mtr>
+                <mtd><mi>&#x22EE;</mi></mtd>
+                <mtd><mi>&#x22EE;</mi></mtd>
+                <mtd><mi>&#x22F1;</mi></mtd>
+                <mtd><mi>&#x22EE;</mi></mtd>
+              </mtr>
+
+              <mtr>
+                <mtd><msub><mi>c</mi><mi>n1</mi></msub></mtd>
+                <mtd><msub><mi>c</mi><mi>n2</mi></msub></mtd>
+                <mtd><mi>&#x22EF;</mi></mtd>
+                <mtd><msub><mi>c</mi><mi>nm</mi></msub></mtd>
+             </mtr>
+
+           </mtable>
+           <mo>]</mo>
+
+           <mo>[</mo>
+           <mtable>
+              <mtr>
+                <mtd><msub><mi>P</mi><mn>1</mn></msub></mtd>
+              </mtr>
+              
+              <mtr>
+                <mtd><msub><mi>P</mi><mn>2</mn></msub></mtd>
+              </mtr>
+              
+              <mtr>
+                <mtd><mi>&#x22EE;</mi></mtd>
+              </mtr>
+
+              <mtr>
+                <mtd><msub><mi>P</mi><mn>m</mn></msub></mtd>
+             </mtr>
+
+           </mtable>
+           <mo>]</mo>
+           <mo>=</mo>
+           <mo>[</mo>
+           <mtable>
+              <mtr>
+                <mtd><msub><mi>C</mi><mn>1</mn></msub></mtd>
+              </mtr>
+              
+              <mtr>
+                <mtd><msub><mi>C</mi><mn>2</mn></msub></mtd>
+              </mtr>
+              
+              <mtr>
+                <mtd><mi>&#x22EE;</mi></mtd>
+              </mtr>
+
+              <mtr>
+                <mtd><msub><mi>C</mi><mn>n</mn></msub></mtd>
+             </mtr>
+
+           </mtable>
+           <mo>]</mo>
+        </mrow>
+     </math>
+     Where <math><mi>c</mi></math> are coefficients with values of either 0 or 1, and <math><mi>C</mi></math> represent coded packets that are sent forward.
+     It is expected to send the coded packet with its corresponding coefficients row. Therefore, it is important to strike a balance between number of packets to code together and the overall size of one packet.
+     That's why a group of packet is lumped into a generation, and only packets in the same generation is coded together.
+     <br><br>
+     Once a node receives a coded packet it reduces it using the packets it already has received, while making sure to update the received coefficients row with the reductions.
+     The output will either be a row of zeroes, meaning no new information is in this packet, a row with only one coefficient, meaning a new packet was calculated, or a row with more than one coefficient, meaning this row includes new information, but not enough packets have been received to decode it.
+     Once the node has received all the packets in a generation it sends a message back asking for a new generation.
+
+</p>
+
+
+<h3>
     Random Linear Network Coding
 </h3>
+
+<p>
+    While receiving feedback from the nodes can help in constructing less redundat coded packets. It is usually not the best idea, as transmitting data is requires more energy than receiving data. Therefore, it is important to also reduce the number of feedback messages from the noeds.
+    Random Linear Network Coding tries to tackle this by simply sending random combinations of the packets in a generation until all nodes are done decoding the generation. This way the only message needed is the message requesting a new generation.
+</p>
