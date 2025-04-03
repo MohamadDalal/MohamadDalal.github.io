@@ -9,6 +9,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="/script.js"></script>
 <script src="/SharedComponents/NavBar.js"></script>
+<script src="/SharedComponents/load_article_from_URL.js"></script>
 <title>Moddy's projects</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:url" content="https://mohamaddalal.github.io/Projects/Layout.html">
@@ -63,5 +64,21 @@
     <!-- Filled by JQuery from footer in shared components -->
 </footer>
 </body>
-
+<!-- <script>
+    $(document).ready(function() {
+        // console.log("Last slash: " + window.location.href.split("/")[-1]);
+        // console.log("Current URL: " + window.location.href);
+        // console.log("Split URL: " + window.location.href.split("/"));
+        // console.log("Last slash: " + window.location.href.split("/").at(-1));
+        // console.log("Last slash split: " + window.location.href.split("/").at(-1).split("#"));
+        // console.log(document.URL);
+        const splitter = "?";
+        const last_slash = window.location.href.split("/").at(-1);
+        if (last_slash.split(splitter).length > 1){
+            console.log("Inner page available: " + last_slash.split(splitter));
+            const inner_page = last_slash.split(splitter).at(-1) + '.html';
+            loadArticle(inner_page);
+        }
+    });
+</script> -->
 </html> 
